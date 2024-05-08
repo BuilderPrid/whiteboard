@@ -1,22 +1,50 @@
 import React from "react";
+import { useStomp } from "../contexts/stomp-context";
 
 export default function Whiteboard() {
+  const { stompClient, connected } = useStomp();
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   React.useEffect(() => {
     // Variables to store drawing state
     let isDrawing = false;
     let lastX = 0;
     let lastY = 0;
+    stompClient?.subscribe("/topic/drawing", (message) => {
+      // const {x,y} = JSON.parse(;
+      console.log(JSON.parse(message.body));
+      const {x,y} = JSON.parse(message.body);
+     if (!isDrawing) return;
 
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext("2d");
+      if (ctx) {
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+      }
+
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+      
+    });
     const startDrawing = (e: { offsetX: number; offsetY: number }) => {
       isDrawing = true;
-
+      stompClient?.publish({
+        destination: "/app/draw",
+        body: JSON.stringify({
+          x: e.offsetX,
+          y: e.offsetY,
+          tool: "pencil",
+          color: "black",
+          size: 1,
+        }),
+      });
       [lastX, lastY] = [e.offsetX, e.offsetY];
     };
 
     // Function to draw
     const draw = (e: { offsetX: number; offsetY: number }) => {
-      if (!isDrawing) return;
+     if (!isDrawing) return;
 
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext("2d");
@@ -52,6 +80,7 @@ export default function Whiteboard() {
     canvas.addEventListener("mousemove", draw);
     canvas.addEventListener("mouseup", endDrawing);
     canvas.addEventListener("mouseout", endDrawing);
+    console.log("events done");
 
     return () => {
       // Clean up event listeners when component unmounts
@@ -60,8 +89,8 @@ export default function Whiteboard() {
       canvas.removeEventListener("mouseup", endDrawing);
       canvas.removeEventListener("mouseout", endDrawing);
     };
-  }, []);
-
+  }, [stompClient]);
+  if (!connected) return <div>Connecting...</div>;
   return (
     <div className="bg-red-400">
       <canvas
