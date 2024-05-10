@@ -6,11 +6,11 @@ export default function App() {
       <div className="flex flex-col space-y-10 h-[80vh] items-center justify-center text-2xl">
         <div className="space-x-8">
           <button className="bg-red-400 rounded-lg p-3 w-[110px]">
-            <Link to={'/create'}>
-            Create
-</Link>
+            <Link to={"/create"}>Create</Link>
           </button>
-          <button className="bg-blue-400 rounded-lg p-3 w-[110px]">Join</button>
+          <button className="bg-blue-400 rounded-lg p-3 w-[110px]">
+            <Link to={"/join"}>Join</Link>
+          </button>
         </div>
         <button className="bg-green-400 rounded-lg p-3 w-[110px]">Try</button>
       </div>

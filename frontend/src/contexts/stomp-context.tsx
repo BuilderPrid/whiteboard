@@ -19,13 +19,17 @@ const StompProvider: React.FC<{ children: React.ReactNode }> = ({
     let client = null;
     const socket = new SockJs("http://localhost:8080/ws-draw");
     client = Stomp.over(socket);
+    client.debug = () => {};
     client.connect(
       {},
       () => {
         setConnected(true);
         setStompClient(client);
         console.log("Connected to socket");
-        client.publish("/app/draw",)
+        // client.publish({
+        //   destination:"/app/draw",
+        //   body:JSON.stringify({})
+        // });
       },
       (error: Error) => {
         console.log("Error connecting to socket", error);

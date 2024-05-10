@@ -12,10 +12,12 @@
   "dependencies": {
     "@clerk/clerk-react": "^5.0.0",
     "@stomp/stompjs": "^7.0.0",
+    "axios": "^1.6.8",
     "framer-motion": "^11.1.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.4",
+    "react-icons": "^5.2.1",
     "react-router-dom": "^6.23.0",
     "sockjs": "^0.3.24",
     "sockjs-client": "^1.6.1",
