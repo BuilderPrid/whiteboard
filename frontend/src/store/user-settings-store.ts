@@ -1,4 +1,5 @@
 import {create} from 'zustand'
+import { WhiteboardElement, WhiteboardElementType, whiteBoardRecord } from '../zod/whiteboard-elements';
 type KeyValue<T> ={
     [key:string]:T
 }
@@ -18,8 +19,22 @@ export const useUserConnection = create<UserConnectionState>((set) => ({
     setSize: (size: KeyValue<number>) => set({size}),
 }));
 
+export interface userStoreType {
+  userElements: KeyValue<WhiteboardElementType[]>;
+  setUserElements: (userEmail: string, elements: WhiteboardElementType[]) => void;
+}
+export const usersStore = create<userStoreType>((set,get) => ({
+  userElements: {} as KeyValue<WhiteboardElementType[]>,
+  setUserElements: (userEmail: string, elements: WhiteboardElementType[]) => {
+    console.log("setting elements", userEmail)
+    set({
+      userElements: {
+        ...get().userElements,
+        [userEmail]: elements, // Create a new array reference
+  }})},
+}));
 
-export type UserConnectionState = {
+export interface UserConnectionState {
   lastX: KeyValue<number>;
   setLastX: (lastX: KeyValue<number>) => void;
   lastY: KeyValue<number>;
